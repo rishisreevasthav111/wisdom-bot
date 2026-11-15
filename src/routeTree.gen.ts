@@ -10,33 +10,115 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AskRouteImport } from './routes/ask'
+import { Route as BrowseRouteImport } from './routes/browse'
+import { Route as RequestsRouteImport } from './routes/requests'
+import { Route as ShareRouteImport } from './routes/share'
+import { Route as PlacementsIndexRouteImport } from './routes/placements.index'
+import { Route as PlacementsCompanyRouteImport } from './routes/placements.$company'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AskRoute = AskRouteImport.update({
+  id: '/ask',
+  path: '/ask',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BrowseRoute = BrowseRouteImport.update({
+  id: '/browse',
+  path: '/browse',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RequestsRoute = RequestsRouteImport.update({
+  id: '/requests',
+  path: '/requests',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ShareRoute = ShareRouteImport.update({
+  id: '/share',
+  path: '/share',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlacementsIndexRoute = PlacementsIndexRouteImport.update({
+  id: '/placements/',
+  path: '/placements/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlacementsCompanyRoute = PlacementsCompanyRouteImport.update({
+  id: '/placements/$company',
+  path: '/placements/$company',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/ask': typeof AskRoute
+  '/browse': typeof BrowseRoute
+  '/requests': typeof RequestsRoute
+  '/share': typeof ShareRoute
+  '/placements/$company': typeof PlacementsCompanyRoute
+  '/placements/': typeof PlacementsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/ask': typeof AskRoute
+  '/browse': typeof BrowseRoute
+  '/requests': typeof RequestsRoute
+  '/share': typeof ShareRoute
+  '/placements/$company': typeof PlacementsCompanyRoute
+  '/placements': typeof PlacementsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/ask': typeof AskRoute
+  '/browse': typeof BrowseRoute
+  '/requests': typeof RequestsRoute
+  '/share': typeof ShareRoute
+  '/placements/$company': typeof PlacementsCompanyRoute
+  '/placements/': typeof PlacementsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/ask'
+    | '/browse'
+    | '/requests'
+    | '/share'
+    | '/placements/$company'
+    | '/placements/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/ask'
+    | '/browse'
+    | '/requests'
+    | '/share'
+    | '/placements/$company'
+    | '/placements'
+  id:
+    | '__root__'
+    | '/'
+    | '/ask'
+    | '/browse'
+    | '/requests'
+    | '/share'
+    | '/placements/$company'
+    | '/placements/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AskRoute: typeof AskRoute
+  BrowseRoute: typeof BrowseRoute
+  RequestsRoute: typeof RequestsRoute
+  ShareRoute: typeof ShareRoute
+  PlacementsCompanyRoute: typeof PlacementsCompanyRoute
+  PlacementsIndexRoute: typeof PlacementsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +130,59 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/ask': {
+      id: '/ask'
+      path: '/ask'
+      fullPath: '/ask'
+      preLoaderRoute: typeof AskRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/browse': {
+      id: '/browse'
+      path: '/browse'
+      fullPath: '/browse'
+      preLoaderRoute: typeof BrowseRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/requests': {
+      id: '/requests'
+      path: '/requests'
+      fullPath: '/requests'
+      preLoaderRoute: typeof RequestsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/share': {
+      id: '/share'
+      path: '/share'
+      fullPath: '/share'
+      preLoaderRoute: typeof ShareRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/placements/': {
+      id: '/placements/'
+      path: '/placements'
+      fullPath: '/placements/'
+      preLoaderRoute: typeof PlacementsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/placements/$company': {
+      id: '/placements/$company'
+      path: '/placements/$company'
+      fullPath: '/placements/$company'
+      preLoaderRoute: typeof PlacementsCompanyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AskRoute: AskRoute,
+  BrowseRoute: BrowseRoute,
+  RequestsRoute: RequestsRoute,
+  ShareRoute: ShareRoute,
+  PlacementsCompanyRoute: PlacementsCompanyRoute,
+  PlacementsIndexRoute: PlacementsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
