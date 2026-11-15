@@ -4,6 +4,7 @@
  */
 import {
   COURSES,
+  COURSE_CODE_MAP,
   TIP_TYPES,
   type Answer,
   type AskFilters,
@@ -53,8 +54,12 @@ function detectProfessors(text: string, tips: Tip[]): string[] {
   const t = norm(text);
   const profs = Array.from(new Set(tips.map((x) => x.professor).filter(Boolean))) as string[];
   return profs.filter((p) => {
-    const surname = (p.split(" ").at(-1) ?? p).toLowerCase();
-    return t.includes(` ${surname} `);
+    const parts = p
+      .toLowerCase()
+      .replace(/[^a-z0-9\s]/g, " ")
+      .split(/\s+/)
+      .filter((part) => part.length >= 3 && !["prof", "dr", "mr", "mrs", "sir"].includes(part));
+    return parts.some((part) => t.includes(` ${part} `));
   });
 }
 
@@ -67,7 +72,7 @@ function detectCompanies(text: string, tips: Tip[]): string[] {
 function keywordScore(question: string, tip: Tip): number {
   const words = norm(question)
     .split(" ")
-    .filter((w) => w.length > 3 && !STOPWORDS.has(w));
+    .filter((w) => w.length >= 3 && !STOPWORDS.has(w));
   const hay = norm(`${tip.text} ${tip.course} ${tip.professor ?? ""} ${tip.company ?? ""}`);
   return words.reduce((n, w) => (hay.includes(` ${w}`) ? n + 1 : n), 0);
 }
@@ -117,7 +122,11 @@ export function selectTips(question: string, allTips: Tip[], filters: AskFilters
   } else if (types.includes("Placements")) {
     matched = pool.filter((t) => t.type === "Placements");
   } else {
-    matched = pool.filter((t) => keywordScore(question, t) >= 2);
+    const questionWords = norm(question)
+      .split(" ")
+      .filter((w) => w.length >= 3 && !STOPWORDS.has(w));
+    const minThreshold = questionWords.length <= 1 ? 1 : 2;
+    matched = pool.filter((t) => keywordScore(question, t) >= minThreshold);
   }
   pool = matched;
   if (pool.length === 0) return [];
@@ -142,8 +151,12 @@ export function selectTips(question: string, allTips: Tip[], filters: AskFilters
 }
 
 export function buildAnswer(question: string, tips: Tip[], id: string): Answer {
-  const courses = Array.from(new Set(tips.map((t) => t.company ?? t.course)));
-  const topic = courses.slice(0, 2).join(" & ");
+  const topics = Array.from(
+    new Set(
+      tips.map((t) => t.professor || t.company || t.course_name || t.course || "General"),
+    ),
+  );
+  const topic = topics.slice(0, 2).join(" & ");
   const years = tips.map((t) => t.year);
 
   const conflictTips = tips.filter((t) => t.conflict);
@@ -194,10 +207,18 @@ export function splitBulkText(raw: string, idPrefix = "d"): DraftTip[] {
     .map((c) => c.replace(/^\s*(?:[-*•]|\d+[.)])\s+/, "").replace(/\s+/g, " ").trim())
     .filter((c) => c.length >= 20);
 
-  return chunks.map((text, i) => ({
-    tempId: `${idPrefix}${i + 1}`,
-    course: detectCourses(text)[0] ?? "",
-    type: detectTypes(text)[0] ?? "General",
-    text,
-  }));
+  return chunks.map((text, i) => {
+    const course = detectCourses(text)[0] ?? "";
+    const type = detectTypes(text)[0] ?? "General";
+    const category = type === "Placements" ? "company" : course ? "course" : "general";
+    return {
+      tempId: `${idPrefix}${i + 1}`,
+      category,
+      course,
+      course_name: course || undefined,
+      course_code: course ? COURSE_CODE_MAP[course] : undefined,
+      type,
+      text,
+    };
+  });
 }

@@ -1,4 +1,5 @@
-import type { Company, Tip, TipAuthor, UnansweredQuestion } from "./types";
+import { generateTipEmbedding } from "./embeddings";
+import { COURSE_CODE_MAP, type Company, type Tip, type TipAuthor, type UnansweredQuestion } from "./types";
 
 const v = (name: string, batch: number, branch = "CSE"): TipAuthor => ({
   anonymous: false,
@@ -10,7 +11,7 @@ const v = (name: string, batch: number, branch = "CSE"): TipAuthor => ({
 });
 const anon: TipAuthor = { anonymous: true, verified: false, showBadge: false };
 
-export const MOCK_TIPS: Tip[] = [
+const RAW_MOCK_TIPS: Tip[] = [
   // ── Operating Systems (contains a deliberate disagreement) ──
   {
     id: "t1",
@@ -519,6 +520,36 @@ export const MOCK_TIPS: Tip[] = [
     createdAt: "2024-08-22",
   },
 ];
+
+export const MOCK_TIPS: Tip[] = RAW_MOCK_TIPS.map((t) => {
+  const isCompany = Boolean(t.company);
+  const isProf = Boolean(t.professor && !t.company);
+  const category = isCompany ? "company" : isProf ? "professor" : "course";
+  const courseCode = t.course !== "Placements" ? (COURSE_CODE_MAP[t.course] ?? t.course) : undefined;
+  const courseName = t.course !== "Placements" ? t.course : undefined;
+  const authorBatch = t.author.batch ? `${t.author.batch} batch` : "2023 batch";
+  const authorId = `auth-${t.id}`;
+  const createdAt = t.createdAt ? `${t.createdAt}T10:42:00+00:00` : "2025-05-12T10:42:00+00:00";
+
+  return {
+    ...t,
+    category,
+    course_code: courseCode,
+    course_name: courseName,
+    author_batch: authorBatch,
+    anonymous: t.author.anonymous,
+    author_id: authorId,
+    created_at: createdAt,
+    embedding: generateTipEmbedding({
+      text: t.text,
+      category,
+      course_code: courseCode,
+      course_name: courseName,
+      professor: t.professor,
+      company: t.company,
+    }),
+  };
+});
 
 export const MOCK_COMPANIES: Company[] = [
   { slug: "amazon", name: "Amazon", tagline: "SDE intern & full-time", roles: ["SDE", "SDE Intern"] },

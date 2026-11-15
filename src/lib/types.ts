@@ -1,3 +1,6 @@
+export const TIP_CATEGORIES = ["course", "professor", "company", "general"] as const;
+export type TipCategory = (typeof TIP_CATEGORIES)[number];
+
 export const TIP_TYPES = ["Prep", "Grading", "Placements", "Projects", "General"] as const;
 export type TipType = (typeof TIP_TYPES)[number];
 
@@ -10,6 +13,15 @@ export const COURSES = [
   "Software Engineering",
 ] as const;
 export type Course = (typeof COURSES)[number];
+
+export const COURSE_CODE_MAP: Record<string, string> = {
+  "Operating Systems": "OS",
+  DBMS: "DBMS",
+  "Data Structures": "DSA",
+  "Computer Networks": "CN",
+  "Machine Learning": "ML",
+  "Software Engineering": "SE",
+};
 
 /** Placement tips use this pseudo-course so they can sit alongside course tips. */
 export const PLACEMENTS_COURSE = "Placements";
@@ -30,9 +42,32 @@ export interface TipAuthor {
 }
 
 export interface Tip {
+  /** UUID primary key */
   id: string;
+  /** UUID of the author */
+  author_id?: string | undefined;
+  /** Primary category: course | professor | company | general */
+  category: TipCategory;
+  /** Short course code (e.g. 'OS', 'DBMS', 'CS301') */
+  course_code?: string | undefined;
+  /** Full course name */
+  course_name?: string | undefined;
+  /** Backwards compatibility for existing UI */
   course: TipCourse;
+  /** Professor name if applicable */
   professor?: string | undefined;
+  /** Company name if applicable */
+  company?: string | undefined;
+  /** Author batch string (e.g. '2023 batch') */
+  author_batch?: string | undefined;
+  /** Anonymity flag */
+  anonymous: boolean;
+  /** 1536-dimensional embedding vector */
+  embedding?: number[] | undefined;
+  /** ISO timestamp for database */
+  created_at?: string | undefined;
+
+  /** Legacy / UI display fields */
   type: TipType;
   /** Year the senior took the course / went through placements */
   year: number;
@@ -41,7 +76,6 @@ export interface Tip {
   author: TipAuthor;
   upvotes: number;
   createdAt: string;
-  company?: string | undefined;
   placementSection?: PlacementSection | undefined;
   /** Tips sharing a conflict group disagree with each other, split by stance. */
   conflict?: { group: string; stance: "a" | "b"; label: string } | undefined;
@@ -49,8 +83,10 @@ export interface Tip {
 
 export interface TipFilters {
   search?: string | undefined;
+  category?: string | undefined;
   course?: string | undefined;
   professor?: string | undefined;
+  company?: string | undefined;
   type?: string | undefined;
   year?: string | undefined;
   sort?: "helpful" | "recent" | undefined;
@@ -74,6 +110,7 @@ export interface Answer {
   yearRange: string;
   freshness: Freshness;
   disagreement?: Disagreement | undefined;
+  model?: string | undefined;
 }
 
 export interface AskFilters {
@@ -98,19 +135,29 @@ export interface UnansweredQuestion {
 }
 
 export interface NewTipInput {
-  course: string;
+  category: TipCategory;
+  course?: string | undefined;
+  course_code?: string | undefined;
+  course_name?: string | undefined;
   professor?: string | undefined;
-  type: TipType;
-  year: number;
-  semester: string;
-  text: string;
+  company?: string | undefined;
+  author_batch?: string | undefined;
   anonymous: boolean;
-  showBadge: boolean;
+  text: string;
+  showBadge?: boolean | undefined;
+  type?: TipType | undefined;
+  year?: number | undefined;
+  semester?: string | undefined;
 }
 
 export interface DraftTip {
   tempId: string;
-  course: string;
+  category?: TipCategory | undefined;
+  course?: string | undefined;
+  course_code?: string | undefined;
+  course_name?: string | undefined;
+  professor?: string | undefined;
+  company?: string | undefined;
   type: TipType;
   text: string;
 }

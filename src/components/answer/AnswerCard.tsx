@@ -21,11 +21,18 @@ export function AnswerCard({ answer }: { answer: Answer }) {
 
   return (
     <article className="animate-rise rounded-3xl border bg-card p-5 shadow-card sm:p-6">
-      <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-primary-ink">
-        <span className="grid size-7 place-items-center rounded-full bg-primary text-primary-foreground">
-          <Sparkles className="size-4" aria-hidden />
-        </span>
-        From senior tips
+      <div className="mb-3 flex items-center justify-between text-sm font-semibold text-primary-ink">
+        <div className="flex items-center gap-2">
+          <span className="grid size-7 place-items-center rounded-full bg-primary text-primary-foreground">
+            <Sparkles className="size-4" aria-hidden />
+          </span>
+          From senior tips
+        </div>
+        {answer.model && (
+          <span className="rounded-full bg-primary-soft px-2.5 py-0.5 text-xs font-semibold text-primary-ink">
+            Synthesized with Gemini AI
+          </span>
+        )}
       </div>
 
       <div className="space-y-3 leading-relaxed">

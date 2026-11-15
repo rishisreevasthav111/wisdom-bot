@@ -47,7 +47,7 @@ export function TipCard({ tip, className }: { tip: Tip; className?: string | und
       <div className="mb-3 flex flex-wrap items-center gap-2">
         <span className="inline-flex items-center gap-1.5 rounded-full bg-secondary px-2.5 py-0.5 text-xs font-semibold text-secondary-foreground">
           <GraduationCap className="size-3.5" aria-hidden />
-          {tip.company ? `${tip.company}` : tip.course}
+          {tip.company ? `${tip.company}` : tip.course_code && tip.course !== tip.course_code ? `${tip.course} (${tip.course_code})` : tip.course}
         </span>
         <TipTypeBadge type={tip.type} />
       </div>
@@ -70,7 +70,7 @@ export function TipCard({ tip, className }: { tip: Tip; className?: string | und
 
       <div className="mt-4 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
         <span>
-          {tip.year} · {tip.semester}
+          {tip.author_batch ?? `${tip.year} · ${tip.semester}`}
         </span>
         <VerifiedBadge author={tip.author} />
       </div>

@@ -102,6 +102,15 @@ Continue developing this project in the [Lovable editor](https://lovable.dev/pro
 - **Stay in sync**: every change made in Lovable is committed straight to this repository.
 - **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
 
+## PostgreSQL + pgvector Database Schema
+
+The tips database schema is defined in [db/schema.sql](file:///c:/Users/rishi/senior-signal-exchange/db/schema.sql) with support for pgvector semantic search:
+
+- **Columns**: `id`, `author_id`, `text`, `category` (`'course'`, `'professor'`, `'company'`, `'general'`), `course_code`, `course_name`, `professor`, `company`, `author_batch`, `anonymous`, `embedding vector(1536)`, and `created_at`.
+- **Excluded**: `upvotes` and `status` are omitted as per specifications.
+- **pgvector**: Stores 1536-dimensional embeddings capturing the composite representation of `(tip, category, course name/code, professor, company)`.
+- **HNSW Index & Matching**: Fast cosine distance vector search function `match_tips`.
+
 ## Development
 
 Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).

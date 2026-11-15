@@ -107,7 +107,7 @@ function CompanyPage() {
                   title={`No ${section.toLowerCase()} tips for ${meta.name} yet`}
                   action={
                     <Button asChild>
-                      <Link to="/share" search={{ topic: "Placements" }}>
+                      <Link to="/share" search={{ topic: meta.name }}>
                         Be the first to contribute
                       </Link>
                     </Button>
