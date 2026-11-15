@@ -25,7 +25,7 @@ import {
 // In-memory "database" (resets on page reload).
 let tips: Tip[] = [...MOCK_TIPS];
 let unanswered: UnansweredQuestion[] = [...MOCK_UNANSWERED];
-const reports: { tipId: string; reason: ReportReason; details?: string }[] = [];
+const reports: { tipId: string; reason: ReportReason; details?: string | undefined }[] = [];
 const feedback: Record<string, "up" | "down"> = {};
 const upvoted = new Set<string>();
 let seq = 1000;
@@ -141,7 +141,7 @@ export function hasUpvoted(tipId: string) {
   return upvoted.has(tipId);
 }
 
-export async function reportTip(tipId: string, reason: ReportReason, details?: string) {
+export async function reportTip(tipId: string, reason: ReportReason, details?: string | undefined) {
   await delay(400);
   reports.push({ tipId, reason, details });
   return { ok: true };

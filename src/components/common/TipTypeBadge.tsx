@@ -9,7 +9,7 @@ const TYPE_CLASS: Record<TipType, string> = {
   General: "tag-general",
 };
 
-export function TipTypeBadge({ type, className }: { type: TipType; className?: string }) {
+export function TipTypeBadge({ type, className }: { type: TipType; className?: string | undefined }) {
   return (
     <span
       className={cn(

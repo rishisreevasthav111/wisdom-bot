@@ -6,7 +6,7 @@ import { VerifiedBadge } from "@/components/common/VerifiedBadge";
 import type { Tip } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
-export function SourcesList({ tips, defaultOpen = false }: { tips: Tip[]; defaultOpen?: boolean }) {
+export function SourcesList({ tips, defaultOpen = false }: { tips: Tip[]; defaultOpen?: boolean | undefined }) {
   const [open, setOpen] = useState(defaultOpen);
   return (
     <Collapsible open={open} onOpenChange={setOpen} className="rounded-2xl border bg-background/60">

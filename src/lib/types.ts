@@ -20,10 +20,10 @@ export type PlacementSection = (typeof PLACEMENT_SECTIONS)[number];
 
 export interface TipAuthor {
   anonymous: boolean;
-  name?: string;
+  name?: string | undefined;
   /** Graduating batch, e.g. 2025 → "Class of 2025" */
-  batch?: number;
-  branch?: string;
+  batch?: number | undefined;
+  branch?: string | undefined;
   verified: boolean;
   /** When false, the verified badge is hidden even if the author is verified. */
   showBadge: boolean;
@@ -32,7 +32,7 @@ export interface TipAuthor {
 export interface Tip {
   id: string;
   course: TipCourse;
-  professor?: string;
+  professor?: string | undefined;
   type: TipType;
   /** Year the senior took the course / went through placements */
   year: number;
@@ -41,19 +41,19 @@ export interface Tip {
   author: TipAuthor;
   upvotes: number;
   createdAt: string;
-  company?: string;
-  placementSection?: PlacementSection;
+  company?: string | undefined;
+  placementSection?: PlacementSection | undefined;
   /** Tips sharing a conflict group disagree with each other, split by stance. */
-  conflict?: { group: string; stance: "a" | "b"; label: string };
+  conflict?: { group: string; stance: "a" | "b"; label: string } | undefined;
 }
 
 export interface TipFilters {
-  search?: string;
-  course?: string;
-  professor?: string;
-  type?: string;
-  year?: string;
-  sort?: "helpful" | "recent";
+  search?: string | undefined;
+  course?: string | undefined;
+  professor?: string | undefined;
+  type?: string | undefined;
+  year?: string | undefined;
+  sort?: "helpful" | "recent" | undefined;
 }
 
 export interface Disagreement {
@@ -73,13 +73,13 @@ export interface Answer {
   tips: Tip[];
   yearRange: string;
   freshness: Freshness;
-  disagreement?: Disagreement;
+  disagreement?: Disagreement | undefined;
 }
 
 export interface AskFilters {
-  course?: string;
-  professor?: string;
-  type?: string;
+  course?: string | undefined;
+  professor?: string | undefined;
+  type?: string | undefined;
 }
 
 export interface Company {
@@ -99,7 +99,7 @@ export interface UnansweredQuestion {
 
 export interface NewTipInput {
   course: string;
-  professor?: string;
+  professor?: string | undefined;
   type: TipType;
   year: number;
   semester: string;

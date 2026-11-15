@@ -177,7 +177,7 @@ function CtaCard({
   body: string;
   cta: string;
   to: "/ask" | "/share";
-  accent?: boolean;
+  accent?: boolean | undefined;
 }) {
   return (
     <Link

@@ -13,7 +13,7 @@ import { TIP_TYPES } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 export type FilterKey = "course" | "professor" | "type" | "year";
-export type FilterValues = Partial<Record<FilterKey | "search", string>>;
+export type FilterValues = Partial<Record<FilterKey | "search", string | undefined>>;
 
 const ALL = "__all";
 
@@ -21,9 +21,9 @@ interface FilterBarProps {
   value: FilterValues;
   onChange: (next: FilterValues) => void;
   fields: FilterKey[];
-  showSearch?: boolean;
-  searchPlaceholder?: string;
-  className?: string;
+  showSearch?: boolean | undefined;
+  searchPlaceholder?: string | undefined;
+  className?: string | undefined;
 }
 
 export function FilterBar({

@@ -9,8 +9,8 @@ import { askQuestion } from "@/lib/api";
 import type { Answer } from "@/lib/types";
 
 export const Route = createFileRoute("/ask")({
-  validateSearch: (search: Record<string, unknown>): { q?: string } => ({
-    q: typeof search.q === "string" && search.q.trim() ? search.q : undefined,
+  validateSearch: (search: Record<string, unknown>): { q?: string | undefined } => ({
+    q: typeof search["q"] === "string" && search["q"].trim() ? search["q"] : undefined,
   }),
   head: () => ({
     meta: [

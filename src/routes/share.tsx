@@ -29,9 +29,9 @@ import {
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/share")({
-  validateSearch: (search: Record<string, unknown>): { topic?: string; question?: string } => ({
-    topic: typeof search.topic === "string" && search.topic ? search.topic : undefined,
-    question: typeof search.question === "string" && search.question ? search.question : undefined,
+  validateSearch: (search: Record<string, unknown>): { topic?: string | undefined; question?: string | undefined } => ({
+    topic: typeof search["topic"] === "string" && search["topic"] ? search["topic"] : undefined,
+    question: typeof search["question"] === "string" && search["question"] ? search["question"] : undefined,
   }),
   head: () => ({
     meta: [
@@ -151,7 +151,7 @@ function SharePage() {
   );
 }
 
-function FieldError({ id, message }: { id: string; message?: string }) {
+function FieldError({ id, message }: { id: string; message?: string | undefined }) {
   if (!message) return null;
   return (
     <p id={id} role="alert" className="text-sm font-medium text-destructive">
@@ -180,7 +180,7 @@ function SingleTipForm({ initialCourse, onDone }: { initialCourse: string; onDon
   const [text, setText] = useState("");
   const [anonymous, setAnonymous] = useState(false);
   const [showBadge, setShowBadge] = useState(true);
-  const [errors, setErrors] = useState<{ course?: string; text?: string }>({});
+  const [errors, setErrors] = useState<{ course?: string | undefined; text?: string | undefined }>({});
   const [submitting, setSubmitting] = useState(false);
 
   const validate = () => {
@@ -366,7 +366,7 @@ function SingleTipForm({ initialCourse, onDone }: { initialCourse: string; onDon
   );
 }
 
-type DraftWithError = DraftTip & { error?: string };
+type DraftWithError = DraftTip & { error?: string | undefined };
 
 function BulkPaste({ onDone }: { onDone: (count: number) => void }) {
   const invalidate = useInvalidateAll();

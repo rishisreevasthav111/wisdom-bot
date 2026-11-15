@@ -53,7 +53,7 @@ function detectProfessors(text: string, tips: Tip[]): string[] {
   const t = norm(text);
   const profs = Array.from(new Set(tips.map((x) => x.professor).filter(Boolean))) as string[];
   return profs.filter((p) => {
-    const surname = p.split(" ").at(-1)!.toLowerCase();
+    const surname = (p.split(" ").at(-1) ?? p).toLowerCase();
     return t.includes(` ${surname} `);
   });
 }
@@ -88,7 +88,7 @@ export function freshnessFor(years: number[], currentYear = 2025): Freshness {
 
 function firstSentence(text: string): string {
   const m = text.match(/^(.+?[.!?])(\s|$)/);
-  return (m ? m[1] : text).trim();
+  return (m?.[1] ?? text).trim();
 }
 
 /** Picks the tips relevant to a question. Returns [] when nothing relevant exists. */
@@ -143,20 +143,22 @@ export function selectTips(question: string, allTips: Tip[], filters: AskFilters
 
 export function buildAnswer(question: string, tips: Tip[], id: string): Answer {
   const courses = Array.from(new Set(tips.map((t) => t.company ?? t.course)));
-  const topic = courses.length === 1 ? courses[0] : courses.slice(0, 2).join(" & ");
+  const topic = courses.slice(0, 2).join(" & ");
   const years = tips.map((t) => t.year);
 
   const conflictTips = tips.filter((t) => t.conflict);
   let disagreement: Answer["disagreement"];
   const group = conflictTips[0]?.conflict?.group;
   if (group) {
-    const a = conflictTips.filter((t) => t.conflict!.group === group && t.conflict!.stance === "a");
-    const b = conflictTips.filter((t) => t.conflict!.group === group && t.conflict!.stance === "b");
-    if (a.length && b.length) {
+    const a = conflictTips.filter((t) => t.conflict?.group === group && t.conflict.stance === "a");
+    const b = conflictTips.filter((t) => t.conflict?.group === group && t.conflict.stance === "b");
+    const a0 = a[0];
+    const b0 = b[0];
+    if (a0 && b0) {
       disagreement = {
-        topic: `${a[0].course}${a[0].professor ? ` with ${a[0].professor}` : ""}`,
-        sideA: { label: a[0].conflict!.label, tips: a },
-        sideB: { label: b[0].conflict!.label, tips: b },
+        topic: `${a0.course}${a0.professor ? ` with ${a0.professor}` : ""}`,
+        sideA: { label: a0.conflict?.label ?? "One view", tips: a },
+        sideB: { label: b0.conflict?.label ?? "Another view", tips: b },
       };
     }
   }

@@ -14,11 +14,11 @@ import { getCourseOptions } from "@/lib/api";
 import { cn } from "@/lib/utils";
 
 interface CourseComboboxProps {
-  id?: string;
+  id?: string | undefined;
   value: string;
   onChange: (value: string) => void;
-  invalid?: boolean;
-  describedBy?: string;
+  invalid?: boolean | undefined;
+  describedBy?: string | undefined;
 }
 
 export function CourseCombobox({ id, value, onChange, invalid, describedBy }: CourseComboboxProps) {

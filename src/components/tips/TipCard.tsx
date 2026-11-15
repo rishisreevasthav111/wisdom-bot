@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 
 const TRUNCATE_AT = 180;
 
-export function TipCard({ tip, className }: { tip: Tip; className?: string }) {
+export function TipCard({ tip, className }: { tip: Tip; className?: string | undefined }) {
   const [expanded, setExpanded] = useState(false);
   const [reportOpen, setReportOpen] = useState(false);
   const [votes, setVotes] = useState(tip.upvotes);

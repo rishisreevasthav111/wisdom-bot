@@ -6,10 +6,10 @@ export function PageHeader({
   description,
   children,
 }: {
-  eyebrow?: string;
+  eyebrow?: string | undefined;
   title: string;
-  description?: string;
-  children?: ReactNode;
+  description?: string | undefined;
+  children?: ReactNode | undefined;
 }) {
   return (
     <header className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
